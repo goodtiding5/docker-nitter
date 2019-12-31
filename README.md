@@ -30,6 +30,7 @@ version: '3.3'
 services:
   app:
     image: epenguincom/nitter:latest
+    container_name: nitter
     volumes:
       - ./data:/data
     ports:

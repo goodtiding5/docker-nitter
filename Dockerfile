@@ -61,15 +61,16 @@ RUN  apk --no-cache add \
 	 sqlite-libs \
 	 curl
 
-RUN  set -x; \
-     addgroup -g 82 -S www-data ; \
-     adduser -u 82 -D -S -G www-data www-data
-
-RUN  mkdir -p /build /data \
-&&   chown www-data:www-data /data \
-&&   chmod 777 /data
-
 COPY ./entrypoint.sh /entrypoint.sh
+
+RUN  set -x; \
+     addgroup -g 82 -S www-data; \
+     adduser -u 82 -D -S -G www-data www-data \
+&&   mkdir -p /build /data; \
+     chown www-data:www-data /data; \
+     chmod 777 /data \
+&&   chmod 0555 /entrypoint.sh
+
 COPY --from=build /build/nitter/nitter /usr/local/bin
 COPY --from=build /build/nitter/nitter.conf /build
 COPY --from=build /build/nitter/public /build/public

@@ -4,8 +4,19 @@ services:
   app:
     image: epenguincom/nitter:latest
     container_name: nitter
+    restart: always
+    depends_on:
+      - redis
     volumes:
-      - ./data:/data
+      - ./data/nitter:/data
     ports:
       - "127.0.0.1:8080:8080"
+    environment:
+      - REDIS_HOST="redis"
+
+  redis:
+    image: redis:alpine
+    container_name: redis
     restart: always
+    volumes:
+      - ./data/redis:/data

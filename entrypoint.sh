@@ -39,7 +39,7 @@ construct_nitter_conf
 
 if [[ $@ ]]; then 
     case "$1" in
-	"bootstrap")
+	"init")
 	    # workdir is prepared by now
 	    ;;
 	

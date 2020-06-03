@@ -7,12 +7,13 @@ RUN apk update \
         libffi-dev \
 	openssl-dev \
 	unzip \
-	git
+	git \
+&&  mkdir -p /build
+
+WORKDIR /build
     
-RUN set -x \
-&&  mkdir /build && cd /build \
-&&  git clone $REPO nitter \
-&&  cd /build/nitter \
+RUN set -ex \
+&&  git clone $REPO . \
 &&  nimble build -y -d:release --passC:"-flto" --passL:"-flto" \
 &&  strip -s nitter \
 &&  nimble scss
@@ -55,6 +56,9 @@ FROM alpine:latest
 
 LABEL maintainer="ken@epenguin.com"
 
+ENV  REDIS_HOST="localhost" \
+     REDIS_PORT=6379
+
 RUN  apk --no-cache add \
      	 tini \
 	 pcre \
@@ -62,8 +66,9 @@ RUN  apk --no-cache add \
 	 curl
 
 COPY ./entrypoint.sh /entrypoint.sh
+COPY ./nitter.conf.pre /nitter.conf.pre
 
-RUN  set -x; \
+RUN  set -ex; \
      addgroup -g 82 -S www-data; \
      adduser -u 82 -D -S -G www-data www-data \
 &&   mkdir -p /build /data; \
@@ -71,9 +76,8 @@ RUN  set -x; \
      chmod 777 /data \
 &&   chmod 0555 /entrypoint.sh
 
-COPY --from=build /build/nitter/nitter /usr/local/bin
-COPY --from=build /build/nitter/nitter.conf /build
-COPY --from=build /build/nitter/public /build/public
+COPY --from=build /build/nitter /usr/local/bin
+COPY --from=build /build/public /build/public
 COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
 
 WORKDIR /data

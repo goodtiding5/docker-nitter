@@ -16,11 +16,11 @@ Here are some of Nitter features:
 
 ## Usage
 
-We use docker composer to manage this nitter instance.
+We use docker composer to manage the nitter instance.
 
 ### Installation
 
-Create a directory for the nitter deployment.  Create a subdirectory `data` to keep all nitter data.
+Create a directory for the nitter deployment.  Create  subdirectories `data/nitter` and `data/redis` to keep all nitter and redis data.
 
 Here is the `docker-compose.yml` file:
 
@@ -31,37 +31,47 @@ services:
   app:
     image: epenguincom/nitter:latest
     container_name: nitter
+    restart: always
+    depends_on:
+      - redis
     volumes:
-      - ./data:/data
+      - ./data/nitter:/data
     ports:
       - "127.0.0.1:8080:8080"
+    environment:
+      - REDIS_HOST="redis"
+
+  redis:
+    image: redis:alpine
+    container_name: redis
     restart: always
+    volumes:
+      - ./data/redis:/data
 ```
 
-### Bootstrap
+### Initialization
 
 Run the following command to bootstrap/populate nitter configuration file and working directories.
 
 ```
-$ docker-compose run app /entrypoint.sh bootstrap
+$ docker-compose run app /entrypoint.sh init
 ```
 
-Make any necessary changes to the configuration file `data/nitter.conf` before run the instance.
+Make any necessary changes to the configuration file `data/nitter/nitter.conf` before run the instance.
 
 ### Running the instance
 
 This image has a builtin health check mechanism to terminate the container if any problems occur.  Therefore, it is desired that we should start the container with *auto restart* enabled.
 
-To start the container, run the following command:
+To start the container in detached mode, run the following command:
 
 ```
 $ docker-compose up -d
 ```
 
-It's recommend to put a reverse proxy in front of it for public access.
+It's recommend to deploy a reverse proxy to provide the  public access.
 
-For nginx, here is the sample setup with letsencryp for the reference:
-
+For nginx, here is the sample setup with letsencryp for your reference:
 ```
 server {
     listen [::]:443 ssl;
@@ -90,7 +100,7 @@ server {
 
 Nitter is still under active development.  Docker images for nitter will be updated constantly.
 
-To utilize the latest image, run the following commands:
+To apply the latest image, just run the following commands:
 
 ```
 $ docker-compose down

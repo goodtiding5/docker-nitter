@@ -22,10 +22,10 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: docker push epenguin/nitter:latest
+    script: docker push epenguincom/nitter:latest
     on:
       tags: true
   - provider: script
-    script: docker push epenguin/nitter:${tag}
+    script: docker push epenguincom/nitter:${tag}
     on:
       all_branches: true

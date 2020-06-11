@@ -24,7 +24,7 @@ deploy:
   - provider: script
     script: docker push epenguincom/nitter:latest
     on:
-      tags: true
+      all_branches: true
   - provider: script
     script: docker push epenguincom/nitter:${tag}
     on:

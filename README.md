@@ -55,7 +55,7 @@ services:
 Run the following command to bootstrap/populate nitter configuration file and working directories.
 
 ```
-$ docker-compose run app /entrypoint.sh init
+$ docker-compose run app init
 ```
 
 Make any necessary changes to the configuration file `data/nitter/nitter.conf` before run the instance.

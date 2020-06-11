@@ -87,5 +87,4 @@ EXPOSE  8080
 
 HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 
-ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]

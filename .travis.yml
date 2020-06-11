@@ -1,5 +1,31 @@
-sudo: required
+language: bash
+
+notifications:
+  email: false
+
 services:
   - docker
+
+before_script:
+  - tag="build-"`date +"%Y%m%d"`
+
 script:
-  - docker build -t nitter .
+  docker build --pull --compress -t nitter .
+
+after_script:
+  docker images
+
+before_deploy:
+  - docker tag nitter epenguincom/nitter:latest 
+  - docker tag nitter epenguincom/nitter:${tag}
+  - docker login -u "$DOCKER_USER" -p "DOCKER_PASS"
+
+deploy:
+  - provider: script
+    script: docker push epenguin/nitter:latest
+    on:
+      tags: true
+  - provider: script
+    script: docker push epenguin/nitter:${tag}
+    on:
+      tags: true

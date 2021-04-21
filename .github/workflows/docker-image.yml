@@ -36,4 +36,4 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: [epenguincom/nitter:latest, epenguincom/nitter:build-${{ env.timestamp }}]
+        tags: epenguincom/nitter:latest, epenguincom/nitter:build-${{ env.timestamp }}

@@ -1,4 +1,7 @@
 # Nitter
+
+[![Build Status](https://github.com/goodtiding5/docker-nitter/actions/workflows/docker-image.yml/badge.svg)](https://github.com/goodtiding5/docker-nitter/actions)
+
 [![Build Status](https://travis-ci.org/goodtiding5/docker-nitter.svg?branch=master)](https://travis-ci.org/goodtiding5/docker-nitter)
 
 [Nitter](https://nitter.net) is an alternative [Twitter](https://twitter.com) front-end with the focus on privacy. According to its author, it is inspired by the [invidio.us](https://invidio.us) project and is released under GPL 3 license.

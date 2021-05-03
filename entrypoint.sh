@@ -27,20 +27,18 @@ build_working_dir()
 
 construct_nitter_conf()
 {
-    local flag="$WORKD/.nitter_is_ready"
-    if [ ! -f $flag ]; then
-	rm -f $WORKD/nitter.conf
+    if [ ! -f $WORKD/nitter..conf ]; then
 	cat /dist/nitter.conf.pre \
 	    | sed "s/REDIS_HOST/$REDIS_HOST/g" \
 	    | sed "s/REDIS_PORT/$REDIS_PORT/g" \
 	    | sed "s/NITTER_HOST/$NITTER_HOST/g" \
 	    | sed "s/NITTER_NAME/$NITTER_NAME/g" \
+	    | sed "s/NITTER_THEME/$NITTER_THEME/g" \
 	    | sed "s/REPLACE_TWITTER/$REPLACE_TWITTER/g" \
 	    | sed "s/REPLACE_YOUTUBE/$REPLACE_YOUTUBE/g" \
 	    | sed "s/REPLACE_INSTAGRAM/$REPLACE_INSTAGRAM/g" > $WORKD/nitter.conf
-	touch $flag
     fi
-    chown www-data:www-data $WORKD/nitter.conf $flag
+    chown www-data:www-data $WORKD/nitter.conf
 }
 
 run_nitter_program()

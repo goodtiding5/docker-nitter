@@ -69,7 +69,7 @@ RUN  apk --no-cache add \
 	 curl
 
 COPY ./entrypoint.sh /entrypoint.sh
-COPY ./nitter.conf.pre /nitter.conf.pre
+COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 RUN  set -ex; \
      addgroup -g 82 -S www-data; \

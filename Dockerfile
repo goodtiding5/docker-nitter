@@ -57,7 +57,10 @@ FROM alpine:latest
 LABEL maintainer="ken@epenguin.com"
 
 ENV  REDIS_HOST="localhost" \
-     REDIS_PORT=6379
+     REDIS_PORT=6379 \
+     NITTER_HOST="nitter.net" \
+     NITTER_TITLE="nitter" \
+     INVIDIOUS_HOST="invidio.us" \
 
 RUN  apk --no-cache add \
      	 tini \

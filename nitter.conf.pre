@@ -2,12 +2,11 @@
 address = "0.0.0.0"
 port = 8080
 https = false  # disable to enable cookies when not using https
-staticDir = "public"
-title = "cayote"
-hostname = "nitter.net"
+staticDir = "./public"
+title = NITTER_TITLE
+hostname = NITTER_HOST
 
 [Cache]
-directory = "tmp"
 listMinutes = 240  # how long to cache list info (not the tweets, so keep it high)
 rssMinutes = 10  # how long to cache rss queries
 redisHost = REDIS_HOST
@@ -20,6 +19,7 @@ redisMaxConnections = 30
 
 [Config]
 hmacKey = "secretkey" # random key for cryptographic signing of video urls
+base64Media = false # use base64 encoding for proxied media urls
 tokenCount = 10
 # minimum amount of usable tokens. tokens are used to authorize API requests,
 # but they expire after ~1 hour, and have a limit of 187 requests.
@@ -30,8 +30,8 @@ tokenCount = 10
 # Change default preferences here, see src/prefs_impl.nim for a complete list
 [Preferences]
 theme = "Nitter"
-replaceTwitter = "nitter.net"
-replaceYouTube = "invidio.us"
+replaceTwitter = NITTER_HOST
+replaceYouTube = INVIDIOUS_HOST
 replaceInstagram = ""
 proxyVideos = true
 hlsPlayback = false

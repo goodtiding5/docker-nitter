@@ -30,8 +30,8 @@ tokenCount = 10
 # Change default preferences here, see src/prefs_impl.nim for a complete list
 [Preferences]
 theme = "Nitter"
-replaceTwitter = NITTER_HOST
-replaceYouTube = INVIDIOUS_HOST
+replaceTwitter = "nitter.net"
+replaceYouTube = "invidio.us"
 replaceInstagram = ""
 proxyVideos = true
 hlsPlayback = false

@@ -4,7 +4,6 @@ set -eu
 
 NITTER_NAME="${NITTER_NAME:-nitter}"
 NITTER_HOST="${NITTER_HOST:-nitter.net}"
-INVIDIOUS_HOST="${INVIDIOUS_HOST:-invidio.us}"
 REDIS_HOST="${REDIS_HOST:-redis}"
 REDIS_PORT="${REDIS_PORT:-6379}"
 
@@ -28,7 +27,7 @@ construct_nitter_conf()
     if [ ! -f $flag ]; then
 	rm -f $WORKD/nitter.conf
 	cat /dist/nitter.conf.pre > $WORKD/nitter.conf
-	sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_NAME/$NITTER_NAME/g; s/INVIDIOUS_HOST/$INVIDIOUS_HOST/g; " $WORKD/nitter.conf
+	sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_NAME/$NITTER_NAME/g;" $WORKD/nitter.conf
 	touch $flag
     fi
 }

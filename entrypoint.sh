@@ -24,9 +24,13 @@ build_working_dir()
 
 construct_nitter_conf()
 {
-    rm -f $WORKD/nitter.conf
-    cat /nitter.conf.pre > $WORKD/nitter.conf
-    sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_NAME/$NITTER_NAME/g; s/INVIDIOUS_HOST/$INVIDIOUS_HOST/g; " $WORKD/nitter.conf
+    local flag="$WORKD/.nitter_is_ready"
+    if [ ! -f $flag ]; then
+	rm -f $WORKD/nitter.conf
+	cat /dist/nitter.conf.pre > $WORKD/nitter.conf
+	sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_NAME/$NITTER_NAME/g; s/INVIDIOUS_HOST/$INVIDIOUS_HOST/g; " $WORKD/nitter.conf
+	touch $flag
+    fi
 }
 
 run_nitter_program()

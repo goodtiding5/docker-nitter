@@ -2,10 +2,14 @@
 
 set -eu
 
-NITTER_NAME="${NITTER_NAME:-nitter}"
-NITTER_HOST="${NITTER_HOST:-nitter.net}"
 REDIS_HOST="${REDIS_HOST:-redis}"
 REDIS_PORT="${REDIS_PORT:-6379}"
+NITTER_HOST="${NITTER_HOST:-nitter.net}"
+NITTER_NAME="${NITTER_NAME:-nitter}"
+NITTER_THEME="${NITTER_THEME:-Nitter}"
+REPLACE_TWITTER="${REPLACE_TWITTER:-nitter.net}"
+REPLACE_YOUTUBE="${REPLACE_YOUTUBE:-invidio.us}"
+REPLACE_INSTAGRAM="${REPLACE_INSTAGRAM:-""}"
 
 BUILD="/build"
 WORKD="/data"
@@ -26,10 +30,17 @@ construct_nitter_conf()
     local flag="$WORKD/.nitter_is_ready"
     if [ ! -f $flag ]; then
 	rm -f $WORKD/nitter.conf
-	cat /dist/nitter.conf.pre > $WORKD/nitter.conf
-	sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_NAME/$NITTER_NAME/g;" $WORKD/nitter.conf
+	cat /dist/nitter.conf.pre \
+	    | sed "s/REDIS_HOST/$REDIS_HOST/g" \
+	    | sed "s/REDIS_PORT/$REDIS_PORT/g" \
+	    | sed "s/NITTER_HOST/$NITTER_HOST/g" \
+	    | sed "s/NITTER_NAME/$NITTER_NAME/g" \
+	    | sed "s/REPLACE_TWITTER/$REPLACE_TWITTER/g" \
+	    | sed "s/REPLACE_YOUTUBE/$REPLACE_YOUTUBE/g" \
+	    | sed "s/REPLACE_INSTAGRAM/$REPLACE_INSTAGRAM/g" > $WORKD/nitter.conf
 	touch $flag
     fi
+    chown www-data:www-data $WORKD/nitter.conf $flag
 }
 
 run_nitter_program()

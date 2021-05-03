@@ -59,8 +59,11 @@ LABEL maintainer="ken@epenguin.com"
 ENV  REDIS_HOST="localhost" \
      REDIS_PORT=6379 \
      NITTER_HOST="nitter.net" \
-     NITTER_TITLE="nitter" \
-     INVIDIOUS_HOST="invidio.us"
+     NITTER_NAME="nitter" \
+     NITTER_THEME="Nitter" \
+     REPLACE_TWITTER="nitter.net" \
+     REPLACE_YOUTUBE="invidio.us" \
+     REPLACE_INSTAGRAM=""
 
 RUN  apk --no-cache add \
      	 tini \

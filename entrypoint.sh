@@ -24,8 +24,7 @@ build_working_dir()
 
 construct_nitter_conf()
 {
-    [ -f $WORKD/nitter.conf ] && return
-
+    rm -f $WORKD/nitter.conf
     cat /nitter.conf.pre > $WORKD/nitter.conf
     sed -i "s/REDIS_HOST/$REDIS_HOST/g; s/REDIS_PORT/$REDIS_PORT/g; s/NITTER_HOST/$NITTER_HOST/g; s/NITTER_TITLE/$NITTER_TITLE/g; s/INVIDIOUS_HOST/$INVIDIOUS_HOST/g; " $WORKD/nitter.conf
 }

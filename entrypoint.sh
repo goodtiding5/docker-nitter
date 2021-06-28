@@ -27,7 +27,7 @@ build_working_dir()
 
 construct_nitter_conf()
 {
-    if [ ! -f $WORKD/nitter..conf ]; then
+    if [ ! -f $WORKD/nitter.conf ]; then
 	cat /dist/nitter.conf.pre \
 	    | sed "s/REDIS_HOST/$REDIS_HOST/g" \
 	    | sed "s/REDIS_PORT/$REDIS_PORT/g" \

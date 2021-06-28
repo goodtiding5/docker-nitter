@@ -68,7 +68,8 @@ ENV  REDIS_HOST="localhost" \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
-RUN  adduser -D -h /data -u 82 www-data
+RUN set -eux \
+&&  adduser -D -h /data -u 82 www-data
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public

@@ -70,7 +70,8 @@ COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 RUN set -eux \
 &&  cat /etc/passwd \
-&&  adduser -D -h /data -u 82 www-data
+&&  addgroup -g 82 www-data \
+&&  adduser -u 82 -G www-data -h /data -D www-data
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public

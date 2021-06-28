@@ -65,7 +65,7 @@ ENV  REDIS_HOST="localhost" \
      REPLACE_YOUTUBE="invidio.us" \
      REPLACE_INSTAGRAM=""
 
-RUN  apk --no-cache add \
+RUN  apk --update --no-cache add \
      	 tini \
 	 pcre \
 	 sqlite-libs \
@@ -75,11 +75,11 @@ COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 RUN  set -ex; \
-     addgroup -g 82 -S www-data; \
-     adduser -u 82 -D -S -G www-data www-data \
-&&   mkdir -p /build /data; \
-     chown www-data:www-data /data; \
-     chmod 777 /data \
+&&   addgroup -g 82 -S www-data \
+&&   adduser -u 82 -D -S -G www-data www-data \
+&&   mkdir -p /build /data \
+&&   chown www-data:www-data /data \
+&&   chmod 777 /data \
 &&   chmod 0555 /entrypoint.sh
 
 COPY --from=build /build/nitter /usr/local/bin

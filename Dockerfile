@@ -69,6 +69,7 @@ COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 RUN set -eux \
+&&  cat /etc/passwd \
 &&  adduser -D -h /data -u 82 www-data
 
 COPY --from=build /build/nitter /usr/local/bin

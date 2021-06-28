@@ -71,13 +71,15 @@ ENV  REDIS_HOST="localhost" \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
+RUN chmod 0555 /entrypoint.sh \
+&&  addgroup --gid "$GID" www-data \
+&&  adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data
+
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public
 COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
 
-RUN  apk --update add --no-cache tini \
-&&   addgroup --gid "$GID" www-data \
-&&   adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data
+RUN apk add --no-cache tini
 
 WORKDIR /data
 VOLUME  /data

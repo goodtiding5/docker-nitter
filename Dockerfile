@@ -75,13 +75,9 @@ COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public
 COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
 
-RUN  set -eux \
-&&   apk --update add --no-cache tini pcre sqlite-libs curl \
+RUN  apk --update add --no-cache tini \
 &&   addgroup --gid "$GID" www-data \
-&&   adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data \
-&&   chmod 777 /data \
-&&   chmod 0555 /entrypoint.sh \
-&&   /bin/true
+&&   adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data
 
 WORKDIR /data
 VOLUME  /data

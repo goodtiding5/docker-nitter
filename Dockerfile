@@ -56,6 +56,9 @@ FROM alpine:latest
 
 LABEL maintainer="ken@epenguin.com"
 
+ARG  GID=82
+ARG  UID=82
+
 ENV  REDIS_HOST="localhost" \
      REDIS_PORT=6379 \
      NITTER_HOST="nitter.net" \
@@ -65,26 +68,20 @@ ENV  REDIS_HOST="localhost" \
      REPLACE_YOUTUBE="invidio.us" \
      REPLACE_INSTAGRAM=""
 
-RUN  apk --update --no-cache add \
-     	 tini \
-	 pcre \
-	 sqlite-libs \
-	 curl
-
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
-
-RUN  set -ex; \
-&&   addgroup -g 82 -S www-data \
-&&   adduser -u 82 -D -S -G www-data www-data \
-&&   mkdir -p /build /data \
-&&   chown www-data:www-data /data \
-&&   chmod 777 /data \
-&&   chmod 0555 /entrypoint.sh
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public
 COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
+
+RUN  set -eux; \
+&&   apk --update add --no-cache tini pcre sqlite-libs curl \
+&&   addgroup --gid "$GID" www-data \
+&&   adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data \
+&&   chmod 777 /data \
+&&   chmod 0555 /entrypoint.sh \
+&&   /bin/true
 
 WORKDIR /data
 VOLUME  /data

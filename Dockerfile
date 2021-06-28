@@ -52,7 +52,7 @@ RUN set -eux; \
 
 # ---------------------------------------------------------------------
 
-FROM alpine:latest
+FROM alpine:3.13
 
 LABEL maintainer="ken@epenguin.com"
 

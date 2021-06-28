@@ -56,8 +56,8 @@ FROM alpine:latest
 
 LABEL maintainer="ken@epenguin.com"
 
-ARG  GID=82
 ARG  UID=82
+ARG  GID=82
 
 ENV  REDIS_HOST="localhost" \
      REDIS_PORT=6379 \
@@ -71,9 +71,7 @@ ENV  REDIS_HOST="localhost" \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
-RUN chmod 0555 /entrypoint.sh \
-&&  addgroup --gid "$GID" www-data \
-&&  adduser --disabled-password --home /data --ingroup www-data --uid "$UID" www-data
+RUN adduser -D -h /data -u "$UID" www-data
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public

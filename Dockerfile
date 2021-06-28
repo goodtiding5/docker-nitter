@@ -68,14 +68,14 @@ ENV  REDIS_HOST="localhost" \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
-RUN addgroup -g 82 www-data 
-RUN adduser -u 82 -G www-data -h /data -D www-data
-
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /build/public
 COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
 
-RUN apk add --no-cache tini
+RUN set -eux \
+&&  addgroup -g 82 www-data \
+&&  adduser -u 82 -G www-data -h /data -D www-data \
+&&  apk add --no-cache tini curl
 
 WORKDIR /data
 VOLUME  /data

@@ -75,7 +75,7 @@ COPY --from=bootstrap /usr/local/bin/gosu /usr/bin/gosu
 RUN set -eux \
 &&  addgroup -g 82 www-data \
 &&  adduser -u 82 -G www-data -h /data -D www-data \
-&&  apk add --no-cache tini curl
+&&  apk add --no-cache tini curl pcre
 
 WORKDIR /data
 VOLUME  /data

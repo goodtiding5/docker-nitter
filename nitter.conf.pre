@@ -1,7 +1,7 @@
 [Server]
 address = "0.0.0.0"
 port = 8080
-https = false  # disable to enable cookies when not using https
+https = NITTER_HTTPS  # disable to enable cookies when not using https
 httpMaxConnections = 100
 staticDir = "./public"
 title = NITTER_NAME
@@ -34,6 +34,7 @@ tokenCount = 10
 theme = NITTER_THEME
 replaceTwitter = REPLACE_TWITTER
 replaceYouTube = REPLACE_YOUTUBE
+replaceReddit = REPLACE_REDDIT
 replaceInstagram = REPLACE_INSTAGRAM
 proxyVideos = true
 hlsPlayback = false

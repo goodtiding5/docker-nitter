@@ -4,11 +4,13 @@ set -eu
 
 REDIS_HOST="${REDIS_HOST:-redis}"
 REDIS_PORT="${REDIS_PORT:-6379}"
+NITTER_HTTPS="${NITTER_HTTPS:-false}"
 NITTER_HOST="${NITTER_HOST:-nitter.net}"
 NITTER_NAME="${NITTER_NAME:-nitter}"
 NITTER_THEME="${NITTER_THEME:-Nitter}"
 REPLACE_TWITTER="${REPLACE_TWITTER:-nitter.net}"
 REPLACE_YOUTUBE="${REPLACE_YOUTUBE:-piped.kavin.rocks}"
+REPLACE_REDDIT="${REPLACE_REDDIT:-teddit.net}"
 REPLACE_INSTAGRAM="${REPLACE_INSTAGRAM:-""}"
 
 BUILD="/build"
@@ -31,11 +33,13 @@ construct_nitter_conf()
 	cat /dist/nitter.conf.pre \
 	    | sed "s/REDIS_HOST/$REDIS_HOST/g" \
 	    | sed "s/REDIS_PORT/$REDIS_PORT/g" \
+	    | sed "s/NITTER_HTTPS/$NITTER_HTTPS/g" \
 	    | sed "s/NITTER_HOST/$NITTER_HOST/g" \
 	    | sed "s/NITTER_NAME/$NITTER_NAME/g" \
 	    | sed "s/NITTER_THEME/$NITTER_THEME/g" \
 	    | sed "s/REPLACE_TWITTER/$REPLACE_TWITTER/g" \
 	    | sed "s/REPLACE_YOUTUBE/$REPLACE_YOUTUBE/g" \
+	    | sed "s/REPLACE_REDDIT/$REPLACE_REDDIT/g" \
 	    | sed "s/REPLACE_INSTAGRAM/$REPLACE_INSTAGRAM/g" > $WORKD/nitter.conf
     fi
     chown www-data:www-data $WORKD/nitter.conf

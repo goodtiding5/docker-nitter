@@ -18,7 +18,7 @@ RUN set -ex \
 &&  nimble build -y -d:release --passC:"-flto" --passL:"-flto" \
 &&  strip -s nitter \
 &&  nimble scss \
-&&  numble md
+&&  nimble md
 
 # ---------------------------------------------------------------------
 

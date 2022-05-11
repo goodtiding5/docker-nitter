@@ -34,6 +34,7 @@ construct_nitter_conf()
 	cat /dist/nitter.conf.pre \
 	    | sed "s/REDIS_HOST/$REDIS_HOST/g" \
 	    | sed "s/REDIS_PORT/$REDIS_PORT/g" \
+	    | sed "s/REDIS_PASS/$REDIS_PASS/g" \
 	    | sed "s/NITTER_HTTPS/$NITTER_HTTPS/g" \
 	    | sed "s/NITTER_HOST/$NITTER_HOST/g" \
 	    | sed "s/NITTER_NAME/$NITTER_NAME/g" \

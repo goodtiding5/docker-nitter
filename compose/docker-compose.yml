@@ -13,10 +13,13 @@ services:
       - "127.0.0.1:8080:8080"
     environment:
       - REDIS_HOST="redis"
-
+      - REPLACE_YOUTUBE="piped.kevin.rock"
+      
   redis:
     image: redis:alpine
     container_name: redis
     restart: always
     volumes:
       - ./data/redis:/data
+    command: redis-server --save 60 1 --loglevel warning
+

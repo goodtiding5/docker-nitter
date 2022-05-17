@@ -6,6 +6,7 @@ RUN apk update \
 &&  apk add libsass-dev \
         libffi-dev \
 	openssl-dev \
+	pcre \
 	unzip \
 	git \
 &&  mkdir -p /build

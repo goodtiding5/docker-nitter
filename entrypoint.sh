@@ -50,7 +50,7 @@ construct_nitter_conf()
 run_nitter_program()
 {
     cd $WORKD
-    exec gosu www-data:www-data /usr/local/bin/nitter
+    exec su-exec www-data:www-data /usr/local/bin/nitter
 }
 
 # -- program starts

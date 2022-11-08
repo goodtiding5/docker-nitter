@@ -20,7 +20,7 @@ redisMaxConnections = 30
 # you receive tons of requests per second
 
 [Config]
-hmacKey = "secretkey" # random key for cryptographic signing of video urls
+hmacKey = NITTER_SECRET # random key for cryptographic signing of video urls
 base64Media = false  # use base64 encoding for proxied media urls
 enableRSS = true  # set this to false to disable RSS feeds
 enableDebug = false  # enable request logs and debug endpoints

@@ -41,7 +41,7 @@ ENV  REDIS_HOST="localhost" \
      REPLACE_INSTAGRAM=""
 
 COPY ./entrypoint.sh /entrypoint.sh
-COPY ./nitter.conf.pre /build/nitter.conf.pre
+COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /dist/public

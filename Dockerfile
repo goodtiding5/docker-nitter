@@ -34,16 +34,17 @@ ENV  REDIS_HOST="localhost" \
      NITTER_HOST="nitter.net" \
      NITTER_NAME="nitter" \
      NITTER_THEME="Nitter" \
+     NITTER_SECRET="my+secret+key" \
      REPLACE_TWITTER="nitter.net" \
      REPLACE_YOUTUBE="piped.kavin.rocks" \
      REPLACE_REDDIT="teddit.net" \
      REPLACE_INSTAGRAM=""
 
 COPY ./entrypoint.sh /entrypoint.sh
-COPY ./nitter.conf.pre /dist/nitter.conf.pre
+COPY ./nitter.conf.pre /build/nitter.conf.pre
 
 COPY --from=build /build/nitter /usr/local/bin
-COPY --from=build /build/public /build/public
+COPY --from=build /build/public /dist/public
 
 RUN set -eux \
 &&  addgroup -g 82 www-data \

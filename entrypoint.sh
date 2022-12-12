@@ -20,12 +20,10 @@ DATA="/data"
 
 build_working_dir()
 {
-    [ -d $DATA ]             || mkdir -p $DATA
-    [ -d $DATA/tmp ]         || mkdir -p $DATA/tmp
-    [ -d $DATA/public ]      || cp -rf   $DIST/public $DATA/.
+    mkdir -p $DATA/tmp || exit 1
+    mkdir -p $DATA/public || exit 1
 
-    chown -R www-data:www-data $DATA
-    chmod 777 $DATA
+    cp -r -f  $DIST/public/* $DATA/public/.
 }
 
 construct_nitter_conf()
@@ -43,14 +41,12 @@ construct_nitter_conf()
       | sed "s/REPLACE_YOUTUBE/$REPLACE_YOUTUBE/g" \
       | sed "s/REPLACE_REDDIT/$REPLACE_REDDIT/g" \
       | sed "s/REPLACE_INSTAGRAM/$REPLACE_INSTAGRAM/g" > $DATA/nitter.conf
-
-    chown www-data:www-data $DATA/nitter.conf
 }
 
 run_nitter_program()
 {
     cd $DATA
-    exec su-exec www-data:www-data /usr/local/bin/nitter
+    exec /usr/local/bin/nitter
 }
 
 # -- program starts

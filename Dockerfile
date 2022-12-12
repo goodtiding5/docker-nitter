@@ -23,7 +23,7 @@ RUN set -ex \
 
 # ---------------------------------------------------------------------
 
-FROM alpine:3.13
+FROM alpine:3.16
 
 LABEL maintainer="ken@epenguin.com"
 
@@ -40,22 +40,24 @@ ENV  REDIS_HOST="localhost" \
      REPLACE_REDDIT="teddit.net" \
      REPLACE_INSTAGRAM=""
 
+RUN set -eux \
+&&  (getent group www-data || addgroup -g 82 www-data) \
+&&  (getent passwd www-data || adduser -u 82 -G www-data -h /data -D www-data) \
+&&  apk add --no-cache curl pcre
+
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./nitter.conf.pre /dist/nitter.conf.pre
 
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /dist/public
 
-RUN set -eux \
-&&  addgroup -g 82 www-data \
-&&  adduser -u 82 -G www-data -h /data -D www-data \
-&&  apk add --no-cache tini curl pcre su-exec
-
 WORKDIR /data
 VOLUME  /data
 
 EXPOSE  8080
 
+USER www-data
+
 HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 
-ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

@@ -26,21 +26,15 @@ build_working_dir()
     cp -r -f  $DIST/public/* $DATA/public/.
 }
 
-construct_nitter_conf()
+setup_nitter_conf()
 {
-    cat /dist/nitter.conf.pre \
-      | sed "s/REDIS_HOST/$REDIS_HOST/g" \
-      | sed "s/REDIS_PORT/$REDIS_PORT/g" \
-      | sed "s/REDIS_PASS/$REDIS_PASS/g" \
-      | sed "s/NITTER_HTTPS/$NITTER_HTTPS/g" \
-      | sed "s/NITTER_HOST/$NITTER_HOST/g" \
-      | sed "s/NITTER_NAME/$NITTER_NAME/g" \
-      | sed "s/NITTER_THEME/$NITTER_THEME/g" \
-      | sed "s/NITTER_SECRET/$NITTER_SECRET/g" \
-      | sed "s/REPLACE_TWITTER/$REPLACE_TWITTER/g" \
-      | sed "s/REPLACE_YOUTUBE/$REPLACE_YOUTUBE/g" \
-      | sed "s/REPLACE_REDDIT/$REPLACE_REDDIT/g" \
-      | sed "s/REPLACE_INSTAGRAM/$REPLACE_INSTAGRAM/g" > $DATA/nitter.conf
+    if [ -f $DATA/nitter.conf ]; then
+        if [ -f /dist/nitter.example.conf ]; then
+            cp /dist/nitter.example.conf $DATA/nitter.conf
+        else
+            curl -f -L https://raw.githubusercontent.com/zedeus/nitter/master/nitter.example.conf > $DATA/nitter.conf
+        fi
+    fi
 }
 
 run_nitter_program()
@@ -52,7 +46,7 @@ run_nitter_program()
 # -- program starts
 
 build_working_dir
-construct_nitter_conf
+setup_nitter_conf
 
 if [[ $@ ]]; then 
     case "$1" in

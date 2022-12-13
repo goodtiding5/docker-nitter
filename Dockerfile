@@ -51,17 +51,18 @@ ENV  NITTER_LISTEN_ADDRESS="0.0.0.0" \
      
 COPY ./entrypoint.sh /entrypoint.sh
 
-RUN set -eux \
-&&  chown root:root /entrypoint.sh \
-&&  chmod 0555 /entrypoint.sh \
-&&  (getent group www-data || addgroup -g 82 www-data) \
-&&  (getent passwd www-data || adduser -u 82 -G www-data -h /data -D www-data) \
-&&  apk add --no-cache curl pcre
-
 COPY --from=build /build/nitter /usr/local/bin
 COPY --from=build /build/public /dist/public
 
 ADD  https://raw.githubusercontent.com/goodtiding5/nitter/master/nitter.example.conf /dist
+
+RUN set -eux \
+&&  (getent group www-data || addgroup -g 82 www-data) \
+&&  (getent passwd www-data || adduser -u 82 -G www-data -h /data -D www-data) \
+&&  apk add --no-cache curl pcre \
+&&  chown root:root /entrypoint.sh /usr/local/bin/nitter \
+&&  chmod 0555 /entrypoint.sh /usr/local/bin/nitter \
+&&  chown -R www-data:www-data /dist
 
 WORKDIR /data
 VOLUME  /data

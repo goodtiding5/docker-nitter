@@ -1,6 +1,7 @@
 FROM nimlang/nim:alpine as build
 
-ARG  REPO=https://github.com/goodtiding5/nitter.git
+ARG REPO=https://github.com/goodtiding5/nitter.git
+ARG BRANCH=develop
 
 RUN apk update \
 &&  apk add libsass-dev \
@@ -14,9 +15,9 @@ RUN apk update \
 WORKDIR /build
     
 RUN set -ex \
-&&  git clone $REPO . \
+&&  git clone -b $BRANCH $REPO . \
 &&  nimble install -y --depsOnly \
-&&  nimble build -y -d:release --passC:"-flto" --passL:"-flto" \
+&&  nimble build -y -d:danger -d:lto \
 &&  strip -s nitter \
 &&  nimble scss \
 &&  nimble md
@@ -47,14 +48,20 @@ ENV  NITTER_LISTEN_ADDRESS="0.0.0.0" \
      CONFIG_ENABLE_RSS=true \
      CONFIG_ENABLE_DEBUG=false \
      CONFIG_PROXY="" \
-     CONFIG_PROXY_AUTH=""
+     CONFIG_PROXY_AUTH="" \
+     PREF_NITTER_THEME="Nitter" \
+     PREF_REPLACE_TWITTER="nitter.net" \
+     PREF_REPLACE_YOUTUBE="piped.video" \
+     PREF_REPLACE_REDDIT="teddit.net" \
+     PREF_PROXY_VIDEOS=true \
+     PREF_HLS_PLAYBACK=false \
+     PREF_INFINITE_SCROLL=false
      
 COPY ./entrypoint.sh /entrypoint.sh
 
 COPY --from=build /build/nitter /usr/local/bin
-COPY --from=build /build/public /dist/public
-
-ADD  https://raw.githubusercontent.com/goodtiding5/nitter/master/nitter.example.conf /dist
+COPY --from=build /build/public /data/public
+COPY --from=build /build/nitter.example.conf /data/nitter.conf
 
 RUN set -eux \
 &&  (getent group www-data || addgroup -g 82 www-data) \
@@ -62,10 +69,9 @@ RUN set -eux \
 &&  apk add --no-cache curl pcre \
 &&  chown root:root /entrypoint.sh /usr/local/bin/nitter \
 &&  chmod 0555 /entrypoint.sh /usr/local/bin/nitter \
-&&  chown -R www-data:www-data /dist
+&&  chown -R www-data:www-data /data
 
 WORKDIR /data
-VOLUME  /data
 
 EXPOSE  8080
 
@@ -74,3 +80,4 @@ USER www-data
 HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["nitter"]

@@ -16,7 +16,7 @@ services:
       - redis
     environment:
       NITTER_SERVER_NAME: "nitter.domain.tld"
-      NITTER_SERVER_TITLE: "nitter""
+      NITTER_SERVER_TITLE: "nitter"
       CACHE_REDIS_HOST: "redis"
       CACHE_REDIS_PORT: 6379
       CONFIG_HMAC_KEY: "A+very+strong+key!"

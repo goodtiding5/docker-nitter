@@ -11,6 +11,9 @@ services:
   nitter:
     image: epenguincom/nitter:latest
     container_name: nitter
+    env_file: .env
+    volumes:
+      - ./public:/data/public
     restart: unless-stopped
     depends_on:
       - redis

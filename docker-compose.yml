@@ -10,18 +10,13 @@ services:
 
   nitter:
     image: epenguincom/nitter:latest
+    build:
+      context: ./docker
     container_name: nitter
-    env_file: .env
     volumes:
-      - ./public:/data/public
+      - ./app:/app
     restart: unless-stopped
     depends_on:
       - redis
-    environment:
-      NITTER_SERVER_NAME: "nitter.domain.tld"
-      NITTER_SERVER_TITLE: "nitter"
-      CACHE_REDIS_HOST: "redis"
-      CACHE_REDIS_PORT: 6379
-      CONFIG_HMAC_KEY: "A+very+strong+key!"
     ports:
       - "127.0.0.1:8080:8080"

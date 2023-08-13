@@ -1,19 +1,20 @@
 FROM nimlang/nim:alpine as build
 
-ARG REPO=https://github.com/goodtiding5/nitter.git
-ARG BRANCH=develop
+ARG REPO=https://github.com/zedeus/nitter.git
+ARG BRANCH=master
 
 RUN apk update \
 &&  apk add libsass-dev \
         libffi-dev \
 	openssl-dev \
 	pcre \
-	unzip \
+	zip \
 	git \
 &&  mkdir -p /build
 
 WORKDIR /build
-    
+
+# build nitter    
 RUN set -ex \
 &&  git clone -b $BRANCH $REPO . \
 &&  nimble install -y --depsOnly \
@@ -22,62 +23,38 @@ RUN set -ex \
 &&  nimble scss \
 &&  nimble md
 
+# create dist file
+RUN zip -r /dist.zip ./public ./nitter.example.conf
+
 # ---------------------------------------------------------------------
 
-FROM alpine:3.17
+FROM alpine:3.18
+
+ARG UID=1000
+ARG GID=1000
 
 LABEL maintainer="ken@epenguin.com"
 
-ENV  NITTER_LISTEN_ADDRESS="0.0.0.0" \
-     NITTER_LISTEN_PORT=8080 \
-     NITTER_USE_HTTPS=false \
-     NITTER_MAX_CONNECTIONS=100 \
-     NITTER_STATIC_DIR="./public" \
-     NITTER_SERVER_TITLE="Nitter" \
-     NITTER_SERVER_NAME="nitter.net" \
-     CACHE_LIST_MINUTES=120 \
-     CACHE_RSS_MINUTES=10 \
-     CACHE_REDIS_HOST="localhost" \
-     CACHE_REDIS_PORT=6379 \
-     CACHE_REDIS_CONNECTIONS=20 \
-     CACHE_REDIS_MAXCONNECTIONS=30 \
-     CACHE_REDIS_PASSWORD="" \
-     CONFIG_HMAC_KEY="secretkey" \
-     CONFIG_BASE64_MEDIA=false \
-     CONFIG_TOKEN_COUNT=10 \
-     CONFIG_ENABLE_RSS=true \
-     CONFIG_ENABLE_DEBUG=false \
-     CONFIG_PROXY="" \
-     CONFIG_PROXY_AUTH="" \
-     PREF_NITTER_THEME="Nitter" \
-     PREF_REPLACE_TWITTER="nitter.net" \
-     PREF_REPLACE_YOUTUBE="piped.video" \
-     PREF_REPLACE_REDDIT="teddit.net" \
-     PREF_PROXY_VIDEOS=true \
-     PREF_HLS_PLAYBACK=false \
-     PREF_INFINITE_SCROLL=false
-     
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
 COPY --from=build /build/nitter /usr/local/bin
-COPY --from=build /build/public /data/public
-COPY --from=build /build/nitter.example.conf /data/nitter.conf
+COPY --from=build /dist.zip /dist.zip
 
 RUN set -eux \
-&&  (getent group www-data || addgroup -g 82 www-data) \
-&&  (getent passwd www-data || adduser -u 82 -G www-data -h /data -D www-data) \
+&&  (getent group nitter || addgroup -g ${GID} nitter) \
+&&  (getent passwd nitter|| adduser -u ${UID} -G nitter -h /app -D nitter) \
 &&  apk add --no-cache curl pcre \
-&&  chown root:root /entrypoint.sh /usr/local/bin/nitter \
-&&  chmod 0555 /entrypoint.sh /usr/local/bin/nitter \
-&&  chown -R www-data:www-data /data
+&&  chown root:root /usr/local/bin/entrypoint.sh /usr/local/bin/nitter \
+&&  chmod 0555 /usr/local/bin/entrypoint.sh /usr/local/bin/nitter \
+&&  chown -R ${UID}:${GID} /app
 
-WORKDIR /data
+WORKDIR /app
 
-EXPOSE  8080
+EXPOSE 8080
 
-USER www-data
+USER nitter
 
 HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["nitter"]

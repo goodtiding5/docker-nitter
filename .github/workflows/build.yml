@@ -41,7 +41,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./docker
-          file: ./Dockerfile
           push: true
           tags: epenguincom/nitter:latest, epenguincom/nitter:build-${{ env.timestamp }}
 

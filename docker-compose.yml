@@ -13,8 +13,12 @@ services:
     build:
       context: ./docker
     container_name: nitter
-    volumes:
-      - ./app:/app
+    environment:
+      NITTER_HOST_NAME: "nitter.domain.tld"
+      NITTER_TITLE: "nitter"
+      CACHE_REDIS_HOST: "redis"
+      CACHE_REDIS_PORT: 6379
+      CONFIG_HMAC_KEY: "A+very+strong+key!"
     restart: unless-stopped
     depends_on:
       - redis

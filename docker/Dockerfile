@@ -28,8 +28,6 @@ RUN set -ex \
 
 FROM alpine:3.18
 
-ARG UID=1000
-ARG GID=1000
 
 LABEL maintainer="ken@epenguin.com"
 
@@ -71,25 +69,25 @@ ENV PREF_THEME="Nitter" \
 
 
 RUN set -eux \
-&&  (getent group nitter || addgroup -g ${GID} nitter) \
-&&  (getent passwd nitter|| adduser -u ${UID} -G nitter -h /app -D nitter) \
+&&  (getent group www-data || addgroup -g 82 www-data) \
+&&  (getent passwd www-data || adduser -u 82 -G www-data -h /data -D www-data) \
 &&  apk add --no-cache curl pcre
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY --from=build /build/nitter /usr/local/bin
-COPY --from=build /build/nitter.example.conf /app/
-COPY --from=build /build/public /app/public
+COPY --from=build /build/nitter.example.conf /data/
+COPY --from=build /build/public /data/public
 
 RUN set -eux \
 &&  chown root:root /usr/local/bin/entrypoint.sh /usr/local/bin/nitter \
 &&  chmod 0555 /usr/local/bin/entrypoint.sh /usr/local/bin/nitter \
-&&  chown -R ${UID}:${GID} /app
+&&  chown -R www-data:www-data /data
 
-WORKDIR /app
+WORKDIR /data
 
 EXPOSE 8080
 
-USER nitter
+USER www-data
 
 HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 

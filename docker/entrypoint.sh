@@ -38,10 +38,10 @@ PREF_PROXY_VIDEOS=${PREF_PROXY_VIDEOS:-true}
 PREF_HLS_PLAYBACK=${PREF_HLS_PLAYBACK:-false}
 PREF_INFINITE_SCROLL=${PREF_INFINITE_SCROLL:-false}
 
-set -eux
+set -eu
 
 # construct config file
-cat > /app/nitter.conf <<EOF
+cat > nitter.conf <<EOF
 
 [Server]
 hostname = "${NITTER_HOST_NAME}"
@@ -80,11 +80,6 @@ hlsPlayback = ${PREF_HLS_PLAYBACK}
 infiniteScroll = ${PREF_INFINITE_SCROLL}
 
 EOF
-
-# -- prepare running environment
-
-[ -d ./public ] || unzip /dist.zip
-
 
 # -- program starts
 
